@@ -32,7 +32,7 @@ if ENVIRONMENT=='development':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['loaclhost', '127.0.0.1','https://joystassh.onrender.com']
+ALLOWED_HOSTS = ['loaclhost', '127.0.0.1','https://joystassh.onrender.com','joystassh.onrender.com']
 SITE_ID = 1
 
 # Application definition
