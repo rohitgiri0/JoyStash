@@ -8,9 +8,11 @@ charset-normalizer==3.4.3
 click==8.2.1
 cookiecutter==2.6.0
 cryptography==45.0.7
+dj-database-url==3.0.1
 Django==5.2.5
 django-allauth==65.11.1
 django-browser-reload==1.18.0
+django-environ==0.12.0
 django-tailwind==4.2.0
 gunicorn==23.0.0
 idna==3.10
@@ -19,6 +21,7 @@ markdown-it-py==4.0.0
 MarkupSafe==3.0.2
 mdurl==0.1.2
 packaging==25.0
+psycopg2-binary==2.9.10
 pycparser==2.22
 Pygments==2.19.2
 PyJWT==2.10.1

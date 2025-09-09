@@ -32,10 +32,15 @@
 
         <button class="btn" type="submit">Login</button>
         
-<button id="b" 
+{% comment %} <button id="b" 
         type="button" 
         class="login-with-google-btn" 
         onclick="window.location.href='{% provider_login_url 'google' %}'">
+    <b>Sign in with Google</b> 
+
+</button> {% endcomment %}
+<button id="b" type="button" class="login-with-google-btn"
+        onclick="window.location.href=&quot;{% provider_login_url 'google' %}&quot;">
     <b>Sign in with Google</b>
 </button>
 
