@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% load static %}
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+</style>
+
+{% block title %}
+<title>Dashboard</title>
+{% endblock title %}
+
+{% block nav_links %}
+ <div class="hidden md:block">
+        <div class="ml-10 flex items-baseline space-x-4">
+          <a href="{% url "home" %}" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</a>
+          {% if user.is_authenticated %}
+          <a href="{% url "logoutpage" %}" class="text-red-400 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+          
+          {% else %}
+          <a href="{% url "loginpage" %}" class="text-blue-400 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>
+          <a href="{% url "register" %}" class="text-blue-400 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Register</a>
+
+          {% endif %}
+        </div>
+    </div>
+{% endblock nav_links %}
+
+
+{% block nav_links_mobile %}
+
+  <div class="md:hidden hidden" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+      <a href="{% url "home" %}" class="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium">Home</a>
+          {% if user.is_authenticated %}
+          <a href="{% url "logoutpage" %}" class="text-red-400 hover:bg-red-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Logout</a>
+          
+          {% else %}
+          <a href="{% url "loginpage" %}" class="text-blue-400 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>
+          <a href="{% url "register" %}" class="text-blue-400 hover:bg-blue-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Register</a>
+
+          {% endif %}
+    </div>
+  </div>
+{% endblock nav_links_mobile %}
+
+{% block hero %}
+
+    <h1 class="relative text-2xl sm:text-4xl font-extrabold tracking-tight p-6 bg-gradient-to-b from-blue-300 to-blue-600 bg-clip-text text-transparent drop-shadow-md"
+        style='font-family: "Source Code Pro", monospace; font-weight: 700; font-style: normal;'>
+      <span id="welcome-text"></span>
+    </h1>
+
+</h1>
+
+    <!-- Stats -->
+    <div class="fixed top-20 right-4 z-50">
+      <div class=" p-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition duration-300">
+        <h2 class="text-lg font-medium text-gray-300">Total Snippets <b>{{ total_snippets|default:"0" }}</b></h2>
+
+      </div>
+    </div>
+</div>
+
+    <!-- Recent Snippets -->
+    <div class="rounded-lg p-6 shadow-md m-6 overflow-auto">
+      <h2 class="text-2xl font-semibold mb-6 text-gray-50">Recent Snippets</h2>
+      {% if recent_snippets %}
+      <div class="overflow-x-auto">
+        <table class="w-full text-left min-w-max border-collapse text-sm sm:text-base">
+          <thead>
+            <tr class="border-b border-sky-200">
+              <th class="px-2 py-2 sm:px-3 sm:py-3 text-gray-800 font-semibold bg-sky-600 text-sm sm:text-base">Title</th>
+              <th class="px-2 py-2 sm:px-3 sm:py-3 text-gray-800 font-semibold bg-sky-600 text-sm sm:text-base">Type</th>
+              <th class="px-2 py-2 sm:px-3 sm:py-3 text-gray-800 font-semibold bg-sky-600 text-sm sm:text-base text-center">Favorite</th>
+              <th class="px-2 py-2 sm:px-3 sm:py-3 text-gray-800 font-semibold bg-sky-600 text-sm sm:text-base">Tags</th>
+              <th class="px-2 py-2 sm:px-3 sm:py-3 text-gray-800 font-semibold bg-sky-600 text-sm sm:text-base">Created At</th>
+              <th class="px-2 py-2 sm:px-3 sm:py-3 text-gray-800 font-semibold bg-sky-600 text-sm sm:text-base">Actions</th>
+            </tr> 
+          </thead>
+          <tbody>
+            {% for snippet in recent_snippets %}
+            <tr onclick="window.location='{% url 'snippet_detail' snippet.id %}?next={{ request.path }}'" class="sm:hover:shadow-lg sm:hover:bg-sky-900 sm:hover:border-2 transition-shadow transition-colors duration-300 cursor-pointer">
+              <td class="bg-sky-900 px-2 py-2 sm:px-3 sm:py-3 text-blue-200 font-source-code-pro">
+                <a href="{% url 'snippet_detail' snippet.id %}" class="hover:underline">{{ snippet.title }}</a>
+              </td>
+              <td class="bg-sky-900 px-2 py-2 sm:px-3 sm:py-3 text-blue-200 font-source-code-pro capitalize">{{ snippet.snippet_type|default:"-" }}</td>
+              <td class="bg-sky-900 px-2 py-2 sm:px-3 sm:py-3 text-center">
+                {% if snippet.is_favorite %}
+                  <span title="Favorite" class="text-red-500">♥️</span>
+                {% else %}
+                  <span title="Not favorite" class="text-gray-400">-</span>
+                {% endif %}
+              </td>
+              <td class="bg-sky-900 px-2 py-2 sm:px-3 sm:py-3 text-blue-200 font-source-code-pro">
+                {% if snippet.tags %}
+                  {{ snippet.tags }}
+                {% else %}
+                  <span class="text-gray-200">-</span>
+                {% endif %}
+              </td>
+              <td class="bg-sky-900 px-2 py-2 sm:px-3 sm:py-3 text-blue-200 font-source-code-pro">{{ snippet.updated_at|date:"d M Y" }}</td>
+              <td class="bg-sky-900 px-2 py-2 sm:px-3 sm:py-3 flex space-x-2">
+                <a href="{% url 'snippet_update' snippet.id %}?next=dashboard"
+                   class="hover:border-2 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" onclick="event.stopPropagation();">
+                   Edit
+                </a>
+                <form method="post" action="{% url 'snippet_delete' snippet.id %}">
+                  {% csrf_token %}
+<a href="{% url 'snippet_delete' snippet.id %}?next=dashboard"
+   class="hover:border-2 hover:bg-red-700 text-white px-3 py-1 rounded text-sm" onclick="event.stopPropagation();">
+   Delete
+</a>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p class="text-center text-gray-50 text-lg">No snippets yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- JS for Sidebar & Dropdown -->
+  <script>
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const profileBtn = document.getElementById('profile-btn');
+    const profileMenu = document.getElementById('profile-menu');
+    const mainContent = document.getElementById('main-content');
+
+    // Sidebar toggle
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+      overlay.classList.toggle('hidden');
+      // On mobile, add ml-64 to main content when sidebar is open to prevent overlap
+      if (window.innerWidth < 640) {
+        if (!sidebar.classList.contains('-translate-x-full')) {
+          mainContent.classList.add('ml-64');
+        } else {
+          mainContent.classList.remove('ml-64');
+        }
+      }
+    });
+
+    // Close sidebar when clicking overlay
+    overlay.addEventListener('click', () => {
+      sidebar.classList.add('-translate-x-full');
+      overlay.classList.add('hidden');
+      if (window.innerWidth < 640) {
+        mainContent.classList.remove('ml-64');
+      }
+    });
+
+    // Profile dropdown toggle
+    profileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileMenu.classList.toggle('hidden');
+    });
+
+    // Close dropdown if clicked outside
+    window.addEventListener('click', (e) => {
+      if (!profileBtn.contains(e.target) && !profileMenu.contains(e.target)) {
+        profileMenu.classList.add('hidden');
+      }
+    });
+
+    // Responsive: Remove ml-64 if resizing to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 640) {
+        mainContent.classList.remove('ml-64');
+      }
+    });
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const text = "Hey {{ user.username|capfirst }}!";
+      let i = 0;
+      function typeWriter() {
+        if (i < text.length) {
+          document.getElementById("welcome-text").textContent += text.charAt(i);
+          i++;
+          setTimeout(typeWriter, 100);
+        }
+      }
+      typeWriter();
+    });
+  </script>
+
+
+{% endblock hero %}
